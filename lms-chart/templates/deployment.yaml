@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: lms-app
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: lms-app
+
+  template:
+    metadata:
+      labels:
+        app: lms-app
+
+    spec:
+      containers:
+        - name: lms-app
+
+          image: 17845/lms-frontend:v1
+
+          ports:
+            - containerPort: 80
+
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: lms-config
+                  key: environment
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lms-secret
+                  key: password
